@@ -39,6 +39,7 @@ export default function AuthLayout({ children }) {
         sx={{
           display: { xs: 'none', sm: 'block' },
           mt: { md: -2 }
+
         }}
       >
         {children}

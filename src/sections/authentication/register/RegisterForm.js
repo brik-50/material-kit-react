@@ -6,8 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // component
-import Iconify from '../../../components/Iconify';
 
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Iconify from '../../../components/Iconify';
 // ----------------------------------------------------------------------
 
 export default function RegisterForm() {
@@ -24,37 +28,22 @@ export default function RegisterForm() {
     password: Yup.string().required('Password is required')
   });
 
-  // function SignUp(){
-  //   let first_Name = getFieldProps.value('first_Name ');
-  //   let last_Name = getFieldProps('lastName');
-  //   let email = getFieldProps('email');
-  //   let password = getFieldProps('password');
-  //   let user = { first_Name, last_Name, email , password } ;
-  //   console.warn(user);
-  // }
 
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
+      nom: '',
+      prenom: '',
       email: '',
-      password: ''
+      password: '',
+      role: ''
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values) => {
-      // alert(JSON.stringify(values, null, 2));
-      let result = await fetch("http://127.0.0.1:8000/api/register", {
+        await fetch("http://127.0.0.1:8000/api/register", {
         method: 'POST',
-        body: JSON.stringify( values , null, 4),
-        headers:{
-          "Content-Type": 'application/json',
-          "Accept": '*/*',
-        }
+        headers:{"Content-Type": "application/json"},
+        body: JSON.stringify(values)
       });
-      result = await result.json();
-      console.warn("result",result);
-    
-    // alert(JSON.stringify(values, null, 4));
     }
   });
 
@@ -67,26 +56,41 @@ export default function RegisterForm() {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               fullWidth
-              label="First name"
-              autoComplete="fastname"
+              label="nom"
+              autoComplete="nom"
               onChange={formik.handleChange}
-            value={formik.values.firstName}
-              {...getFieldProps('firstName')}
+            value={formik.values.nom}
+              {...getFieldProps('nom')}
               error={Boolean(touched.firstName && errors.firstName)}
               helperText={touched.firstName && errors.firstName}
             />
 
             <TextField
               fullWidth
-              label="Last name"
-              autoComplete="lastname"
+              label="prenom"
+              autoComplete="prenom"
               onChange={formik.handleChange}
-            value={formik.values.lastName}
-              {...getFieldProps('lastName')}
+            value={formik.values.prenom}
+              {...getFieldProps('prenom')}
               error={Boolean(touched.lastName && errors.lastName)}
               helperText={touched.lastName && errors.lastName}
             />
           </Stack>
+          <FormControl fullWidth>
+            <InputLabel id="role_label">Role</InputLabel>
+            <Select
+              labelId="role_label"
+              id="role_id"
+              onChange={formik.handleChange}
+              {...getFieldProps('role')}
+              label="Role"
+              
+            >
+              <MenuItem value="employee">employee</MenuItem>
+              <MenuItem value="gestionnaire">gestionnaire</MenuItem>
+              <MenuItem value="service_de_reclamation">service de reclamation</MenuItem>
+            </Select>
+          </FormControl>
 
           <TextField
             fullWidth
